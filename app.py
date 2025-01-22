@@ -149,7 +149,7 @@ message = st.text_area(
 # Simple Options for mobile
 language = st.selectbox(
     "Message Language",
-    ["Arabic", "English", "Español", "Français"]
+    ["English", "Español", "Français"]
 )
 
 # Analysis button
