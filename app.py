@@ -238,10 +238,28 @@ if show_history:
     else:
         st.info("No messages analyzed yet.")
 
-# Footer
+
+
 st.markdown("---")
 st.markdown("""
     <div style='text-align: center; color: #666;'>
-        Advanced Spam Detection System | Model: v2.0 Enhanced | Updated: 2024
+        Advanced Spam Detection System | Model: v2.0 Enhanced | Updated: 2025
     </div>
 """, unsafe_allow_html=True)
+
+# About section modified to match the first version
+with st.expander("ℹ️ About This Tool"):
+    st.markdown("""
+        This spam detection tool uses machine learning to analyze messages and determine if they're likely to be spam. 
+        
+        **Features:**
+        - Real-time message analysis
+        - Message history tracking
+        - Beautiful user interface
+        - Instant visual feedback
+        
+        **How to use:**
+        1. Enter your message in the text area
+        2. Click the 'Analyze Message' button
+        3. Get instant results with visual indicators
+    """)
