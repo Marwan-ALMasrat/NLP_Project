@@ -128,7 +128,7 @@ st.title("🛡️ Advanced Spam Detection System")
 
 # Quick Stats in a more mobile-friendly layout
 st.markdown("### 📊 Quick Stats")
-col1 = st.column(1)
+col1 = st.columns([1])[0]  # Define only one column for Accuracy Rate
 with col1:
     st.markdown("""
         <div class="metric-card">
