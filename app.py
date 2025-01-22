@@ -1,38 +1,53 @@
 import streamlit as st
 import pickle
-import plotly.graph_objects as go
 from datetime import datetime
 
 # Page configuration
 st.set_page_config(
-    page_title="Spam Message Detector",
+    page_title="Spam Detector",
     page_icon="📧",
     layout="wide"
 )
 
-# Custom CSS
+# Custom CSS for dark theme
 st.markdown("""
     <style>
+    .stApp {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
     .main {
-        padding: 2rem;
+        padding: 1.5rem;
     }
     .stTitle {
-        color: #2c3e50;
-        font-size: 3rem !important;
-        padding-bottom: 2rem;
+        color: #ffffff;
+        font-size: 2.5rem !important;
+        padding-bottom: 1.5rem;
     }
     .stTextInput {
-        margin: 2rem 0;
+        background-color: #2d2d2d;
+        color: #ffffff;
+        margin: 1.5rem 0;
     }
     .prediction-box {
-        padding: 2rem;
-        border-radius: 10px;
-        margin: 2rem 0;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+    }
+    .stButton button {
+        background-color: #4a4a4a;
+        color: #ffffff;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+    }
+    .stButton button:hover {
+        background-color: #5a5a5a;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state for history
+# Initialize session state
 if 'history' not in st.session_state:
     st.session_state.history = []
 
@@ -40,95 +55,81 @@ def load_model():
     try:
         return pickle.load(open('model.pkl', 'rb'))
     except FileNotFoundError:
-        st.error("⚠️ Model file not found. Please ensure 'model.pkl' exists in the same directory.")
+        st.error("⚠️ Model file not found.")
         return None
 
-# Main title with emoji
-st.title('✉️ Smart Spam Detective')
+# Main title
+st.title('📧 Spam Detective')
 
-# Create two columns for layout
+# Create two columns
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    # Main input section
-    st.markdown("### 📝 Enter Your Message")
     message = st.text_area(
-        "Type or paste your message here:",
-        height=150,
-        key="message_input",
-        help="Enter the message you want to analyze for spam"
+        "Enter your message:",
+        height=120,
+        key="message_input"
     )
 
-    # Prediction button with custom styling
-    if st.button('🔍 Analyze Message', use_container_width=True):
+    if st.button('🔍 Analyze', use_container_width=True):
         if message.strip() == "":
-            st.warning("⚠️ Please enter a message first!")
+            st.warning("Please enter a message.")
         else:
             model = load_model()
             if model:
-                # Make prediction
                 prediction = model.predict([message])
-                
-                # Store in history
                 timestamp = datetime.now().strftime("%H:%M:%S")
+                
                 st.session_state.history.append({
-                    "message": message[:50] + "..." if len(message) > 50 else message,
+                    "message": message[:40] + "..." if len(message) > 40 else message,
                     "prediction": prediction[0],
                     "timestamp": timestamp
                 })
                 
-                # Display result with custom styling
                 if prediction[0] == 'spam':
-                    st.error("🚫 SPAM DETECTED!")
+                    st.error("🚫 Spam Detected")
                     st.markdown("""
-                        <div style='background-color: #ffebee; padding: 20px; border-radius: 10px;'>
-                            <h3 style='color: #c62828;'>⚠️ Warning: This message appears to be spam!</h3>
-                            <p>This message shows characteristics commonly associated with spam content.</p>
+                        <div style='background-color: #3d1f1f; padding: 15px; border-radius: 8px; border: 1px solid #ff4444;'>
+                            <h3 style='color: #ff4444;'>Warning: Spam Content</h3>
+                            <p style='color: #dddddd;'>This message has been identified as spam.</p>
                         </div>
                     """, unsafe_allow_html=True)
                 else:
-                    st.success("✅ MESSAGE SAFE!")
+                    st.success("✅ Message Safe")
                     st.markdown("""
-                        <div style='background-color: #e8f5e9; padding: 20px; border-radius: 10px;'>
-                            <h3 style='color: #2e7d32;'>🛡️ This message appears to be legitimate!</h3>
-                            <p>Our analysis suggests this is a safe, non-spam message.</p>
+                        <div style='background-color: #1f3d1f; padding: 15px; border-radius: 8px; border: 1px solid #44ff44;'>
+                            <h3 style='color: #44ff44;'>Safe Content</h3>
+                            <p style='color: #dddddd;'>This message appears to be legitimate.</p>
                         </div>
                     """, unsafe_allow_html=True)
                     st.balloons()
 
 with col2:
-    # History section
-    st.markdown("### 📊 Analysis History")
+    st.markdown("### Recent Analysis")
     if st.session_state.history:
-        for item in reversed(st.session_state.history[-5:]):  # Show last 5 entries
+        for item in reversed(st.session_state.history[-5:]):
             if item["prediction"] == 'spam':
-                st.error(f"🕒 {item['timestamp']} - {item['message']}")
+                st.error(f"{item['timestamp']} - {item['message']}")
             else:
-                st.success(f"🕒 {item['timestamp']} - {item['message']}")
+                st.success(f"{item['timestamp']} - {item['message']}")
     else:
-        st.info("No messages analyzed yet!")
+        st.info("No messages analyzed yet")
 
 # Footer
 st.markdown("---")
 st.markdown("""
-    <div style='text-align: center; color: #666;'>
-        <p>Built with ❤️ using Streamlit | Model: Spam Detection v1.0</p>
+    <div style='text-align: center; color: #888888;'>
+        Spam Detection System v1.0
     </div>
 """, unsafe_allow_html=True)
 
-# Add some helpful information
-with st.expander("ℹ️ About This Tool"):
+# About section
+with st.expander("About"):
     st.markdown("""
-        This spam detection tool uses machine learning to analyze messages and determine if they're likely to be spam. 
+        **Quick Guide:**
+        1. Enter your message
+        2. Click 'Analyze'
+        3. View results and history
         
-        **Features:**
-        - Real-time message analysis
-        - Message history tracking
-        - Beautiful user interface
-        - Instant visual feedback
-        
-        **How to use:**
-        1. Enter your message in the text area
-        2. Click the 'Analyze Message' button
-        3. Get instant results with visual indicators
+        This tool uses machine learning to detect spam messages in real-time.
     """)
