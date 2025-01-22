@@ -37,7 +37,7 @@ st.markdown("""
         text-align: center;
     }
     .metric-card h3 {
-        font-size: 1.2rem;
+        font-size: 1rem;
         margin-bottom: 0.5rem;
         color: #2c3e50;
     }
@@ -128,26 +128,12 @@ st.title("🛡️ Advanced Spam Detection System")
 
 # Quick Stats in a more mobile-friendly layout
 st.markdown("### 📊 Quick Stats")
-col1, col2, col3 = st.columns(3)
+col1 = st.column(1)
 with col1:
     st.markdown("""
         <div class="metric-card">
             <h3>Accuracy Rate</h3>
             <p>99.8%</p>
-        </div>
-    """, unsafe_allow_html=True)
-with col2:
-    st.markdown("""
-        <div class="metric-card">
-            <h3>Response Time</h3>
-            <p>< 500ms</p>
-        </div>
-    """, unsafe_allow_html=True)
-with col3:
-    st.markdown("""
-        <div class="metric-card">
-            <h3>Model Version</h3>
-            <p>2.0</p>
         </div>
     """, unsafe_allow_html=True)
 
